@@ -88,7 +88,7 @@ const CovenantSelectionPage = () => {
     const image = new Image()
 
     image.crossOrigin = 'anonymous'
-    
+
     image.src = backgroundImages[selectedImage]
     image.onload = () => {
       canvas.width = 1080
@@ -150,7 +150,7 @@ const CovenantSelectionPage = () => {
       const canvas = document.createElement('canvas')
       const context = canvas.getContext('2d')
       const image = new Image()
-
+      image.crossOrigin = 'anonymous'
       image.src = backgroundImages[selectedImage]
       image.onload = () => {
         canvas.width = 1080
