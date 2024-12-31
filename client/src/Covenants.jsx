@@ -12,11 +12,11 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import axios from 'axios'
 
 const backgroundImages = [
-  '../public/Images/wallpapper1.jpg',
-  '../public/Images/wallpapper2.jpg',
-  '../public/Images/wallpapper3.jpg',
-  '../public/Images/wallpapper4.jpg',
-  '../public/Images/wallpapper5.jpg',
+  '.Images/wallpapper1.jpg',
+  '.Images/wallpapper2.jpg',
+  '.Images/wallpapper3.jpg',
+  '.Images/wallpapper4.jpg',
+  './Images/wallpapper5.jpg',
 ]
 
 const API_URL = 'http://localhost:8080/covenants' ;
@@ -244,7 +244,7 @@ const CovenantSelectionPage = () => {
   return (
     <div className="max-w-6xl mx-auto p-6">
       <div>
-        <img src="../public/Images/logo.png" className="px-8" />
+        <img src=".Images/logo.png" className="px-8" />
         <h1 className="text-4xl font-neuemachina text-center mb-2 font-bold mt-8 text-black-900">
           The Transfiguration City Of God Church
         </h1>
