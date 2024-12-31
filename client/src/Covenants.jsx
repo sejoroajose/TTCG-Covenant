@@ -10,6 +10,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import axios from 'axios'
+import Cookies from 'js-cookie'
 
 const backgroundImages = [
   'https://res.cloudinary.com/dnu6az3um/image/upload/v1735667894/wallpapper4_webvsj.jpg',
@@ -19,8 +20,7 @@ const backgroundImages = [
   'https://res.cloudinary.com/dnu6az3um/image/upload/v1735667893/wallpapper1_fnwlov.jpg',
 ]
 
-const API_URL = 'http://localhost:8080/covenants' ;
-
+const API_URL = 'https://ttcg-covenant.onrender.com/covenants'
 
 const ScriptureOverlay = ({ scripture, reference }) => (
   <div className="absolute inset-0 flex items-center justify-center p-4">
@@ -57,6 +57,28 @@ const CovenantSelectionPage = () => {
   }
 
   const handleCovenantSelect = async (covenant) => {
+    if (selectedCovenant) {
+      alert('You have already selected a covenant.')
+      return
+    }
+
+    try {
+      const response = await axios.post(`${API_URL}/select/${covenant.id}`)
+      if (response.data.message === 'Covenant selected successfully') {
+        setSelectedCovenant(covenant)
+        Cookies.set('selectedCovenantId', covenant.id.toString(), {
+          expires: 30,
+        }) // Store covenant selection for 30 days
+      } else {
+        alert(response.data.error)
+      }
+    } catch (error) {
+      console.error('Failed to select covenant:', error)
+      alert('An error occurred while selecting the covenant.')
+    }
+  }
+
+  /* const handleCovenantSelect = async (covenant) => {
     if (takenCovenants.includes(covenant.id)) {
       alert('This covenant is already selected.')
       return
@@ -74,9 +96,8 @@ const CovenantSelectionPage = () => {
       console.error('Failed to select covenant:', error)
       alert('An error occurred while selecting the covenant.')
     }
-  }
+  } */
 
-  
   const handleSave = () => {
     if (selectedImage === null || !selectedCovenant) {
       alert('Please select a covenant and background image first.')
@@ -96,7 +117,7 @@ const CovenantSelectionPage = () => {
 
       context.drawImage(image, 0, 0, canvas.width, canvas.height)
 
-      context.fillStyle = '#000000a0' 
+      context.fillStyle = '#000000a0'
       context.fillRect(0, canvas.height / 3, canvas.width, canvas.height / 3)
 
       context.fillStyle = '#E9CB78'
@@ -125,85 +146,82 @@ const CovenantSelectionPage = () => {
       document.body.removeChild(link)
     }
   }
-  
 
-    const dataURLtoBlob = (dataURL) => {
-      const parts = dataURL.split(';base64,')
-      const byteString = atob(parts[1])
-      const mimeType = parts[0].split(':')[1]
+  const dataURLtoBlob = (dataURL) => {
+    const parts = dataURL.split(';base64,')
+    const byteString = atob(parts[1])
+    const mimeType = parts[0].split(':')[1]
 
-      const arrayBuffer = new Uint8Array(byteString.length)
-      for (let i = 0; i < byteString.length; i++) {
-        arrayBuffer[i] = byteString.charCodeAt(i)
-      }
-
-      return new Blob([arrayBuffer], { type: mimeType })
+    const arrayBuffer = new Uint8Array(byteString.length)
+    for (let i = 0; i < byteString.length; i++) {
+      arrayBuffer[i] = byteString.charCodeAt(i)
     }
 
+    return new Blob([arrayBuffer], { type: mimeType })
+  }
 
-    const handleShare = () => {
-      if (selectedImage === null || !selectedCovenant) {
-        alert('Please select a covenant and background image first.')
-        return
-      }
+  
 
-      const canvas = document.createElement('canvas')
-      const context = canvas.getContext('2d')
-      const image = new Image()
-      image.crossOrigin = 'anonymous'
-      image.src = backgroundImages[selectedImage]
-      image.onload = () => {
-        canvas.width = 1080
-        canvas.height = 1080
+  const handleShare = () => {
+    if (selectedImage === null || !selectedCovenant) {
+      alert('Please select a covenant and background image first.')
+      return
+    }
 
-        context.drawImage(image, 0, 0, canvas.width, canvas.height)
+    const canvas = document.createElement('canvas')
+    const context = canvas.getContext('2d')
+    const image = new Image()
+    image.crossOrigin = 'anonymous'
+    image.src = backgroundImages[selectedImage]
+    image.onload = () => {
+      canvas.width = 1080
+      canvas.height = 1080
 
-        
-        context.fillStyle = '#000000a0' 
-        context.fillRect(0, canvas.height / 3, canvas.width, canvas.height / 3)
+      context.drawImage(image, 0, 0, canvas.width, canvas.height)
 
-        
-        context.fillStyle = '#E9CB78'
-        context.font = '40px serif'
-        context.textAlign = 'center'
-        context.fillText(
-          selectedCovenant.scripture,
-          canvas.width / 2,
-          canvas.height / 2
-        )
-        
-        context.fillStyle = '#A5722D'
-        context.font = 'bold 30px serif'
-        context.fillText(
-          selectedCovenant.reference,
-          canvas.width / 2,
-          canvas.height / 2 + 50
-        )
+      context.fillStyle = '#000000a0'
+      context.fillRect(0, canvas.height / 3, canvas.width, canvas.height / 3)
 
-        const dataURL = canvas.toDataURL('image/png')
+      context.fillStyle = '#E9CB78'
+      context.font = '40px serif'
+      context.textAlign = 'center'
+      context.fillText(
+        selectedCovenant.scripture,
+        canvas.width / 2,
+        canvas.height / 2
+      )
 
-        if (navigator.share) {
-          navigator
-            .share({
-              title: 'My Covenant Image',
-              text: 'Check out this beautiful covenant scripture!',
-              files: [
-                new File([dataURLtoBlob(dataURL)], 'covenant-image.png', {
-                  type: 'image/png',
-                }),
-              ],
-            })
-            .then(() => console.log('Shared successfully'))
-            .catch((error) => console.error('Error sharing:', error))
-        } else {
-          navigator.clipboard
-            .writeText(dataURL)
-            .then(() => alert('Image link copied to clipboard.'))
-            .catch((error) => console.error('Error copying link:', error))
-        }
+      context.fillStyle = '#A5722D'
+      context.font = 'bold 30px serif'
+      context.fillText(
+        selectedCovenant.reference,
+        canvas.width / 2,
+        canvas.height / 2 + 50
+      )
+
+      const dataURL = canvas.toDataURL('image/png')
+
+      if (navigator.share) {
+        navigator
+          .share({
+            title: 'My Covenant Image',
+            text: 'Check out this beautiful covenant scripture!',
+            files: [
+              new File([dataURLtoBlob(dataURL)], 'covenant-image.png', {
+                type: 'image/png',
+              }),
+            ],
+          })
+          .then(() => console.log('Shared successfully'))
+          .catch((error) => console.error('Error sharing:', error))
+      } else {
+        navigator.clipboard
+          .writeText(dataURL)
+          .then(() => alert('Image link copied to clipboard.'))
+          .catch((error) => console.error('Error copying link:', error))
       }
     }
-  
+  }
 
   const getCategoryColor = (category) => {
     const colors = {
@@ -219,8 +237,7 @@ const CovenantSelectionPage = () => {
     return colors[category] || 'bg-gray-100 text-gray-800'
   }
 
-  
-  useEffect(() => {
+ /*  useEffect(() => {
     const fetchCovenants = async () => {
       try {
         const response = await axios.get(API_URL)
@@ -235,7 +252,30 @@ const CovenantSelectionPage = () => {
       }
     }
     fetchCovenants()
+  }, []) */
+
+  useEffect(() => {
+    const fetchCovenants = async () => {
+      try {
+        const response = await axios.get(API_URL)
+        setCovenants(response.data)
+
+        const savedCovenantId = Cookies.get('selectedCovenantId')
+        if (savedCovenantId) {
+          const savedCovenant = response.data.find(
+            (covenant) => covenant.id === parseInt(savedCovenantId, 10)
+          )
+          setSelectedCovenant(savedCovenant)
+        }
+      } catch (error) {
+        console.error('Failed to fetch covenants:', error)
+        setError('Failed to load covenants.')
+      }
+    }
+    fetchCovenants()
   }, [])
+
+  
 
   return (
     <div className="max-w-6xl mx-auto p-6">
