@@ -33,13 +33,7 @@ const ScriptureOverlay = ({ scripture, reference }) => (
   </div>
 )
 
-const CovenantSelectionPage = ({
-  filteredCovenants,
-  takenCovenants,
-  selectedCovenant,
-  handleCovenantSelect,
-  getCategoryColor,
-}) => {
+const CovenantSelectionPage = () => {
   const [selectedCovenant, setSelectedCovenant] = useState(null)
   const [takenCovenants, setTakenCovenants] = useState([])
   const [showCamera, setShowCamera] = useState(false)
@@ -60,15 +54,6 @@ const CovenantSelectionPage = ({
     setShowCamera(false)
     setCapturedImage('/api/placeholder/400/300')
     setShowAlert(true)
-  }
-
-  const [visibleCovenants, setVisibleCovenants] = useState({})
-
-  const toggleVisibility = (id) => {
-    setVisibleCovenants((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }))
   }
 
   const handleCovenantSelect = async (covenant) => {
@@ -175,6 +160,8 @@ const CovenantSelectionPage = ({
     return new Blob([arrayBuffer], { type: mimeType })
   }
 
+  
+
   const handleShare = () => {
     if (selectedImage === null || !selectedCovenant) {
       alert('Please select a covenant and background image first.')
@@ -250,7 +237,7 @@ const CovenantSelectionPage = ({
     return colors[category] || 'bg-gray-100 text-gray-800'
   }
 
-  /*  useEffect(() => {
+ /*  useEffect(() => {
     const fetchCovenants = async () => {
       try {
         const response = await axios.get(API_URL)
@@ -287,6 +274,8 @@ const CovenantSelectionPage = ({
     }
     fetchCovenants()
   }, [])
+
+  
 
   return (
     <div className="max-w-6xl mx-auto p-6">
