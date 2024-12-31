@@ -68,7 +68,7 @@ const CovenantSelectionPage = () => {
         setSelectedCovenant(covenant)
         Cookies.set('selectedCovenantId', covenant.id.toString(), {
           expires: 30,
-        }) // Store covenant selection for 30 days
+        }) 
       } else {
         alert(response.data.error)
       }
@@ -77,26 +77,6 @@ const CovenantSelectionPage = () => {
       alert('An error occurred while selecting the covenant.')
     }
   }
-
-  /* const handleCovenantSelect = async (covenant) => {
-    if (takenCovenants.includes(covenant.id)) {
-      alert('This covenant is already selected.')
-      return
-    }
-
-    try {
-      const response = await axios.post(`${API_URL}/select/${covenant.id}`)
-      if (response.data.message === 'Covenant selected successfully') {
-        setSelectedCovenant(covenant)
-        setTakenCovenants([...takenCovenants, covenant.id])
-      } else {
-        alert(response.data.error)
-      }
-    } catch (error) {
-      console.error('Failed to select covenant:', error)
-      alert('An error occurred while selecting the covenant.')
-    }
-  } */
 
   const handleSave = () => {
     if (selectedImage === null || !selectedCovenant) {
@@ -237,22 +217,6 @@ const CovenantSelectionPage = () => {
     return colors[category] || 'bg-gray-100 text-gray-800'
   }
 
- /*  useEffect(() => {
-    const fetchCovenants = async () => {
-      try {
-        const response = await axios.get(API_URL)
-        setCovenants(response.data)
-        const selectedCovenants = response.data
-          .filter((covenant) => covenant.is_selected)
-          .map((covenant) => covenant.id)
-        setTakenCovenants(selectedCovenants)
-      } catch (error) {
-        console.error('Failed to fetch covenants:', error)
-        setError('Failed to load covenants.')
-      }
-    }
-    fetchCovenants()
-  }, []) */
 
   useEffect(() => {
     const fetchCovenants = async () => {
