@@ -76,51 +76,6 @@ const CovenantSelectionPage = () => {
     }
   }
 
-  /* const handleSave = () => {
-    if (selectedImage === null || !selectedCovenant) {
-      alert('Please select a covenant and background image first.')
-      return
-    }
-
-    const canvas = document.createElement('canvas')
-    const context = canvas.getContext('2d')
-    const image = new Image()
-
-    image.src = backgroundImages[selectedImage]
-    image.onload = () => {
-      canvas.width = image.width
-      canvas.height = image.height
-
-      context.drawImage(image, 0, 0, canvas.width, canvas.height)
-
-      context.fillStyle = '#E9CB78'
-      context.font = '24px serif'
-      context.textAlign = 'center'
-      context.fillText(
-        selectedCovenant.scripture,
-        canvas.width / 2,
-        canvas.height / 2
-      )
-
-      context.fillStyle = '#A5722D'
-      context.font = 'bold 20px serif'
-      context.fillText(
-        selectedCovenant.reference,
-        canvas.width / 2,
-        canvas.height / 2 + 40
-      )
-
-      const dataURL = canvas.toDataURL('image/png')
-
-      const link = document.createElement('a')
-      link.href = dataURL
-      link.download = 'covenant-image.png'
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
-    }
-  }
- */
   
   const handleSave = () => {
     if (selectedImage === null || !selectedCovenant) {
@@ -132,20 +87,18 @@ const CovenantSelectionPage = () => {
     const context = canvas.getContext('2d')
     const image = new Image()
 
+    image.crossOrigin = 'anonymous'
+    
     image.src = backgroundImages[selectedImage]
     image.onload = () => {
-      // Set canvas dimensions to Instagram post size (1080 x 1080)
       canvas.width = 1080
       canvas.height = 1080
 
-      // Scale the background image to fit the canvas
       context.drawImage(image, 0, 0, canvas.width, canvas.height)
 
-      // Overlay with scripture text
-      context.fillStyle = '#000000a0' // Semi-transparent black background
+      context.fillStyle = '#000000a0' 
       context.fillRect(0, canvas.height / 3, canvas.width, canvas.height / 3)
 
-      // Scripture text styling
       context.fillStyle = '#E9CB78'
       context.font = '40px serif'
       context.textAlign = 'center'
@@ -155,7 +108,6 @@ const CovenantSelectionPage = () => {
         canvas.height / 2
       )
 
-      // Reference text styling
       context.fillStyle = '#A5722D'
       context.font = 'bold 30px serif'
       context.fillText(
@@ -164,7 +116,6 @@ const CovenantSelectionPage = () => {
         canvas.height / 2 + 50
       )
 
-      // Save the canvas as an image
       const dataURL = canvas.toDataURL('image/png')
       const link = document.createElement('a')
       link.href = dataURL
@@ -175,62 +126,6 @@ const CovenantSelectionPage = () => {
     }
   }
   
-  /* const handleShare = () => {
-    if (selectedImage === null || !selectedCovenant) {
-      alert('Please select a covenant and background image first.')
-      return
-    }
-
-    const canvas = document.createElement('canvas')
-    const context = canvas.getContext('2d')
-    const image = new Image()
-
-    image.src = backgroundImages[selectedImage]
-    image.onload = () => {
-      canvas.width = image.width
-      canvas.height = image.height
-
-      context.drawImage(image, 0, 0, canvas.width, canvas.height)
-
-      context.fillStyle = '#E9CB78'
-      context.font = '24px serif'
-      context.textAlign = 'center'
-      context.fillText(
-        selectedCovenant.scripture,
-        canvas.width / 2,
-        canvas.height / 2
-      )
-
-      context.fillStyle = '#A5722D'
-      context.font = 'bold 20px serif'
-      context.fillText(
-        selectedCovenant.reference,
-        canvas.width / 2,
-        canvas.height / 2 + 40
-      )
-      const dataURL = canvas.toDataURL('image/png')
-
-      if (navigator.share) {
-        navigator
-          .share({
-            title: 'My Covenant Image',
-            text: 'Check out this beautiful covenant scripture!',
-            files: [
-              new File([dataURLtoBlob(dataURL)], 'covenant-image.png', {
-                type: 'image/png',
-              }),
-            ],
-          })
-          .then(() => console.log('Shared successfully'))
-          .catch((error) => console.error('Error sharing:', error))
-      } else {
-        navigator.clipboard
-          .writeText(dataURL)
-          .then(() => alert('Image link copied to clipboard.'))
-          .catch((error) => console.error('Error copying link:', error))
-      }
-    }
-  } */
 
     const dataURLtoBlob = (dataURL) => {
       const parts = dataURL.split(';base64,')
@@ -258,18 +153,16 @@ const CovenantSelectionPage = () => {
 
       image.src = backgroundImages[selectedImage]
       image.onload = () => {
-        // Set canvas dimensions to Instagram post size (1080 x 1080)
         canvas.width = 1080
         canvas.height = 1080
 
-        // Scale the background image to fit the canvas
         context.drawImage(image, 0, 0, canvas.width, canvas.height)
 
-        // Overlay with scripture text
-        context.fillStyle = '#000000a0' // Semi-transparent black background
+        
+        context.fillStyle = '#000000a0' 
         context.fillRect(0, canvas.height / 3, canvas.width, canvas.height / 3)
 
-        // Scripture text styling
+        
         context.fillStyle = '#E9CB78'
         context.font = '40px serif'
         context.textAlign = 'center'
@@ -278,8 +171,7 @@ const CovenantSelectionPage = () => {
           canvas.width / 2,
           canvas.height / 2
         )
-
-        // Reference text styling
+        
         context.fillStyle = '#A5722D'
         context.font = 'bold 30px serif'
         context.fillText(
@@ -327,25 +219,7 @@ const CovenantSelectionPage = () => {
     return colors[category] || 'bg-gray-100 text-gray-800'
   }
 
-  /* useEffect(() => {
-    const fetchCovenants = async () => {
-      try {
-        const response = await axios.get('https://ttcg-covenant.onrender.com/covenants' , {
-          withCredentials: true,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          mode: 'cors',
-        })
-        setCovenants(response.data)
-      } catch (err) {
-        setError(err.message)
-      }
-    }
-
-    fetchCovenants()
-  }, []) */
-
+  
   useEffect(() => {
     const fetchCovenants = async () => {
       try {
