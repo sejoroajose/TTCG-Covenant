@@ -198,7 +198,7 @@ const CovenantSelectionPage = () => {
   useEffect(() => {
     const fetchCovenants = async () => {
       try {
-        const response = await axios.get(API_URL, {
+        const response = await axios.get('https://ttcg-covenant.onrender.com/covenants' , {
           withCredentials: true,
           headers: {
             'Content-Type': 'application/json',

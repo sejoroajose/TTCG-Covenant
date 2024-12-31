@@ -55,7 +55,7 @@ client.connect(function (err) {
 
 app.use(
   cors({
-    origin: '*', // Allow all origins for testing
+    origin: 'hhttps://ttcg-covenant.vercel.app/',
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type'],
