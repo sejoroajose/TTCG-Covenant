@@ -244,7 +244,8 @@ const CovenantSelectionPage = () => {
 
       return new Blob([arrayBuffer], { type: mimeType })
     }
-    
+
+
     const handleShare = () => {
       if (selectedImage === null || !selectedCovenant) {
         alert('Please select a covenant and background image first.')
