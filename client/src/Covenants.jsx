@@ -56,12 +56,26 @@ const CovenantSelectionPage = () => {
     setShowAlert(true)
   }
 
-  const handleCovenantSelect = (covenant) => {
-    if (!takenCovenants.includes(covenant.id)) {
-      setSelectedCovenant(covenant)
-      setTakenCovenants([...takenCovenants, covenant.id])
+  const handleCovenantSelect = async (covenant) => {
+    if (takenCovenants.includes(covenant.id)) {
+      alert('This covenant is already selected.')
+      return
+    }
+
+    try {
+      const response = await axios.post(`${API_URL}/select/${covenant.id}`)
+      if (response.data.message === 'Covenant selected successfully') {
+        setSelectedCovenant(covenant)
+        setTakenCovenants([...takenCovenants, covenant.id])
+      } else {
+        alert(response.data.error)
+      }
+    } catch (error) {
+      console.error('Failed to select covenant:', error)
+      alert('An error occurred while selecting the covenant.')
     }
   }
+
   const handleSave = () => {
     if (selectedImage === null || !selectedCovenant) {
       alert('Please select a covenant and background image first.')
@@ -79,8 +93,8 @@ const CovenantSelectionPage = () => {
 
       context.drawImage(image, 0, 0, canvas.width, canvas.height)
 
-      context.fillStyle = '#E9CB78' 
-      context.font = '24px serif' 
+      context.fillStyle = '#E9CB78'
+      context.font = '24px serif'
       context.textAlign = 'center'
       context.fillText(
         selectedCovenant.scripture,
@@ -88,7 +102,7 @@ const CovenantSelectionPage = () => {
         canvas.height / 2
       )
 
-      context.fillStyle = '#A5722D' 
+      context.fillStyle = '#A5722D'
       context.font = 'bold 20px serif'
       context.fillText(
         selectedCovenant.reference,
@@ -124,8 +138,8 @@ const CovenantSelectionPage = () => {
 
       context.drawImage(image, 0, 0, canvas.width, canvas.height)
 
-      context.fillStyle = '#E9CB78' 
-      context.font = '24px serif' 
+      context.fillStyle = '#E9CB78'
+      context.font = '24px serif'
       context.textAlign = 'center'
       context.fillText(
         selectedCovenant.scripture,
@@ -133,7 +147,7 @@ const CovenantSelectionPage = () => {
         canvas.height / 2
       )
 
-      context.fillStyle = '#A5722D' 
+      context.fillStyle = '#A5722D'
       context.font = 'bold 20px serif'
       context.fillText(
         selectedCovenant.reference,
@@ -177,10 +191,6 @@ const CovenantSelectionPage = () => {
     return new Blob([arrayBuffer], { type: mimeType })
   }
 
-
-
-
-
   const getCategoryColor = (category) => {
     const colors = {
       Promise: 'bg-blue-100 text-blue-800',
@@ -190,12 +200,12 @@ const CovenantSelectionPage = () => {
       Faith: 'bg-indigo-100 text-indigo-800',
       Guidance: 'bg-amber-100 text-amber-800',
       Hope: 'bg-rose-100 text-rose-800',
-      Provision: 'bg-cyan-100 text-cyan-800'
-    };
-    return colors[category] || 'bg-gray-100 text-gray-800';
+      Provision: 'bg-cyan-100 text-cyan-800',
+    }
+    return colors[category] || 'bg-gray-100 text-gray-800'
   }
 
-  useEffect(() => {
+  /* useEffect(() => {
     const fetchCovenants = async () => {
       try {
         const response = await axios.get('https://ttcg-covenant.onrender.com/covenants' , {
@@ -212,7 +222,25 @@ const CovenantSelectionPage = () => {
     }
 
     fetchCovenants()
+  }, []) */
+
+  useEffect(() => {
+    const fetchCovenants = async () => {
+      try {
+        const response = await axios.get(API_URL)
+        setCovenants(response.data)
+        const selectedCovenants = response.data
+          .filter((covenant) => covenant.is_selected)
+          .map((covenant) => covenant.id)
+        setTakenCovenants(selectedCovenants)
+      } catch (error) {
+        console.error('Failed to fetch covenants:', error)
+        setError('Failed to load covenants.')
+      }
+    }
+    fetchCovenants()
   }, [])
+
   return (
     <div className="max-w-6xl mx-auto p-6">
       <div>
