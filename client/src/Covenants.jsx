@@ -44,6 +44,8 @@ const CovenantSelectionPage = () => {
   const [selectedImage, setSelectedImage] = useState(null)
   const [covenants, setCovenants] = useState([])
   const [error, setError] = useState('')
+  const selectedCovenantRef = useRef(null)
+
 
   const filteredCovenants =
     selectedCategory === 'All'
@@ -68,7 +70,13 @@ const CovenantSelectionPage = () => {
         setSelectedCovenant(covenant)
         Cookies.set('selectedCovenantId', covenant.id.toString(), {
           expires: 30,
-        }) 
+        })
+        if (selectedCovenantRef.current) {
+          selectedCovenantRef.current.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+          })
+        } 
       } else {
         alert(response.data.error)
       }
@@ -260,11 +268,11 @@ const CovenantSelectionPage = () => {
       </p>
 
       {selectedCovenant && (
-        <div className="mt-8">
+        <div ref={selectedCovenantRef} className="mt-8">
           <Card className="border-2 border-[#A5722D] bg-black/80">
             <CardHeader>
               <CardTitle className="text-white">
-                Your Selected Covenant
+                Customize Your Selected Covenant
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -355,15 +363,15 @@ const CovenantSelectionPage = () => {
                     covenant.category
                   )}`}
                 >
-                  {covenant.category}
+                  {/* {covenant.category} */}
                 </span>
-                <span className="text-sm font-medium text-[#A5722D]">
+                <span className="text-sm font-medium text-white">
                   {covenant.reference}
                 </span>
               </div>
             </CardHeader>
             <CardContent>
-              <p className="text-sm mb-2 text-gray-700">{covenant.scripture}</p>
+              <p className="text-sm mb-2 text-white">{covenant.scripture}</p>
             </CardContent>
             <CardFooter className="justify-between">
               {takenCovenants.includes(covenant.id) &&
