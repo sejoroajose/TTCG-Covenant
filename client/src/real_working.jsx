@@ -9,7 +9,6 @@ import {
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Input } from '@/components/ui/input'
 import axios from 'axios'
 import Cookies from 'js-cookie'
 
@@ -22,21 +21,14 @@ const backgroundImages = [
 ]
 
 const API_URL = 'https://ttcg-covenant.onrender.com/covenants'
-const LOGO_URL =
-  'https://res.cloudinary.com/dnu6az3um/image/upload/v1735667894/logo_etgyhi.png'
 
-const ScriptureOverlay = ({ scripture, reference, name }) => (
+const ScriptureOverlay = ({ scripture, reference }) => (
   <div className="absolute inset-0 flex items-center justify-center p-4">
     <div className="bg-black/75 p-6 rounded-lg text-center max-w-xl mx-4">
       <p className="text-xl mb-4 font-serif leading-relaxed text-[#E9CB78] whitespace-pre-wrap">
         {scripture}
       </p>
       <p className="text-lg font-bold text-[#A5722D] font-serif">{reference}</p>
-      {name && (
-        <p className="text-sm mt-4 text-white">
-          I am {name}, this is my scriptural covenant for the year 2025!
-        </p>
-      )}
     </div>
   </div>
 )
@@ -49,8 +41,6 @@ const CovenantSelectionPage = () => {
   const [covenants, setCovenants] = useState([])
   const [error, setError] = useState('')
   const selectedCovenantRef = useRef(null)
-  const logoRef = useRef(null)
-  const [userName, setUserName] = useState('')
 
   const handleCovenantSelect = async (covenant) => {
     if (selectedCovenant) {
@@ -85,7 +75,7 @@ const CovenantSelectionPage = () => {
     }
   }
 
-  /* const createCanvasWithText = (image, covenant, canvas) => {
+  const createCanvasWithText = (image, covenant, canvas) => {
     const context = canvas.getContext('2d')
 
     canvas.width = 1080
@@ -138,100 +128,9 @@ const CovenantSelectionPage = () => {
       canvas.width / 2,
       startY + totalTextHeight + 40
     )
-  } */
-
-const createCanvasWithText = (image, covenant, canvas) => {
-  const context = canvas.getContext('2d')
-
-  canvas.width = 1080
-  canvas.height = 1080
-
-  // Draw background
-  context.drawImage(image, 0, 0, canvas.width, canvas.height)
-
-  // Add semi-transparent overlay
-  context.fillStyle = '#000000a0'
-  context.fillRect(0, 0, canvas.width, canvas.height)
-
-  // Configure text settings
-  context.textAlign = 'center'
-  context.textBaseline = 'middle'
-
-  // Draw scripture text
-  const maxWidth = canvas.width * 0.8
-  const lineHeight = 50
-  const words = covenant.scripture.split(' ')
-  let line = ''
-  let lines = []
-
-  context.font = '40px serif'
-  context.fillStyle = '#E9CB78'
-
-  // Word wrap
-  words.forEach((word) => {
-    const testLine = line + word + ' '
-    const metrics = context.measureText(testLine)
-    if (metrics.width > maxWidth) {
-      lines.push(line)
-      line = word + ' '
-    } else {
-      line = testLine
-    }
-  })
-  lines.push(line)
-
-  // Calculate total height and starting Y position
-  const totalTextHeight = lines.length * lineHeight
-  let startY = (canvas.height - totalTextHeight) / 2 - 40
-
-  // Draw each line
-  lines.forEach((line, index) => {
-    context.fillText(line.trim(), canvas.width / 2, startY + index * lineHeight)
-  })
-
-  // Draw reference
-  context.font = 'bold 30px serif'
-  context.fillStyle = '#A5722D'
-  context.fillText(
-    covenant.reference,
-    canvas.width / 2,
-    startY + totalTextHeight + 40
-  )
-
-  // Draw logo at bottom right
-  const logoWidth = 100
-  const logoHeight = 100
-  const logoX = canvas.width - logoWidth - 20
-  const logoY = canvas.height - logoHeight - 60
-
-  if (logoRef.current) {
-    context.drawImage(logoRef.current, logoX, logoY, logoWidth, logoHeight)
   }
 
-  // Draw church name
-  context.font = '16px serif'
-  context.fillStyle = '#ffffff'
-  context.textAlign = 'right'
-  context.fillText(
-    'The Transfiguration City Of God Church',
-    canvas.width - 20,
-    canvas.height - 20
-  )
-
-  // Draw user name and message if provided
-  if (userName) {
-    context.font = '18px serif'
-    context.fillStyle = '#ffffff'
-    context.textAlign = 'right'
-    context.fillText(
-      `I am ${userName}, this is my scriptural covenant for the year 2025!`,
-      canvas.width - 20,
-      canvas.height - 40
-    )
-  }
-}  
-  
-const handleSave = () => {
+  const handleSave = () => {
     if (selectedImage === null || !selectedCovenant) {
       alert('Please select a covenant and background image first.')
       return
@@ -366,18 +265,6 @@ const handleSave = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="mb-6">
-                <label className="block text-white text-sm font-medium mb-2">
-                  Your Name (Optional)
-                </label>
-                <Input
-                  type="text"
-                  placeholder="Enter your name"
-                  value={userName}
-                  onChange={(e) => setUserName(e.target.value)}
-                  className="bg-black/50 border-[#A5722D] text-white"
-                />
-              </div>
               {showImageSelector ? (
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                   {backgroundImages.map((image, index) => (
@@ -412,7 +299,6 @@ const handleSave = () => {
                   <ScriptureOverlay
                     scripture={selectedCovenant.scripture}
                     reference={selectedCovenant.reference}
-                    name={userName}
                   />
                 </div>
               ) : (
