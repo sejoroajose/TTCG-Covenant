@@ -164,7 +164,7 @@ const createCanvasWithText = (image, covenant, canvas) => {
   let line = ''
   let lines = []
 
-  context.font = '40px serif'
+  context.font = '50px serif'
   context.fillStyle = '#E9CB78'
 
   // Word wrap
@@ -190,7 +190,7 @@ const createCanvasWithText = (image, covenant, canvas) => {
   })
 
   // Draw reference
-  context.font = 'bold 30px serif'
+  context.font = 'bold 40px serif'
   context.fillStyle = '#A5722D'
   context.fillText(
     covenant.reference,
@@ -209,7 +209,7 @@ const createCanvasWithText = (image, covenant, canvas) => {
   }
 
   // Draw church name
-  context.font = '16px serif'
+  context.font = '25px serif'
   context.fillStyle = '#ffffff'
   context.textAlign = 'right'
   context.fillText(
@@ -220,7 +220,7 @@ const createCanvasWithText = (image, covenant, canvas) => {
 
   // Draw user name and message if provided
   if (userName) {
-    context.font = '18px serif'
+    context.font = '25px serif'
     context.fillStyle = '#ffffff'
     context.textAlign = 'right'
     context.fillText(
