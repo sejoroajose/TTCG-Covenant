@@ -25,7 +25,7 @@ const API_URL = 'https://ttcg-covenant.onrender.com/covenants'
 const ScriptureOverlay = ({ scripture, reference }) => (
   <div className="absolute inset-0 flex items-center justify-center p-4">
     <div className="bg-black/75 p-6 rounded-lg text-center max-w-xl mx-4">
-      <p className="text-xl mb-4 font-serif leading-relaxed text-[#E9CB78] whitespace-pre-wrap">
+      <p className="text-xl mb-4 font-serif leading-relaxed text-[#E9CB78]">
         {scripture}
       </p>
       <p className="text-lg font-bold text-[#A5722D] font-serif">{reference}</p>
@@ -36,11 +36,26 @@ const ScriptureOverlay = ({ scripture, reference }) => (
 const CovenantSelectionPage = () => {
   const [selectedCovenant, setSelectedCovenant] = useState(null)
   const [takenCovenants, setTakenCovenants] = useState([])
+  const [showCamera, setShowCamera] = useState(false)
+  const [capturedImage, setCapturedImage] = useState(null)
+  const [showAlert, setShowAlert] = useState(false)
+  const [selectedCategory, setSelectedCategory] = useState('All')
   const [showImageSelector, setShowImageSelector] = useState(false)
   const [selectedImage, setSelectedImage] = useState(null)
   const [covenants, setCovenants] = useState([])
   const [error, setError] = useState('')
   const selectedCovenantRef = useRef(null)
+
+  const filteredCovenants =
+    selectedCategory === 'All'
+      ? covenants
+      : covenants.filter((covenant) => covenant.category === selectedCategory)
+
+  const captureImage = () => {
+    setShowCamera(false)
+    setCapturedImage('/api/placeholder/400/300')
+    setShowAlert(true)
+  }
 
   const handleCovenantSelect = async (covenant) => {
     if (selectedCovenant) {
@@ -55,19 +70,12 @@ const CovenantSelectionPage = () => {
         Cookies.set('selectedCovenantId', covenant.id.toString(), {
           expires: 30,
         })
-
-        // Automatically scroll to the customization section
-        setTimeout(() => {
-          if (selectedCovenantRef.current) {
-            selectedCovenantRef.current.scrollIntoView({
-              behavior: 'smooth',
-              block: 'start',
-            })
-          }
-        }, 100)
-
-        // Automatically show image selector
-        setShowImageSelector(true)
+        if (selectedCovenantRef.current) {
+          selectedCovenantRef.current.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+          })
+        }
       } else {
         alert(response.data.error)
       }
@@ -77,69 +85,6 @@ const CovenantSelectionPage = () => {
     }
   }
 
-  const createCanvasWithText = (image, covenant, canvas) => {
-    const context = canvas.getContext('2d')
-
-    canvas.width = 1080
-    canvas.height = 1080
-
-    // Draw background
-    context.drawImage(image, 0, 0, canvas.width, canvas.height)
-
-    // Add semi-transparent overlay
-    context.fillStyle = '#000000a0'
-    context.fillRect(0, 0, canvas.width, canvas.height)
-
-    // Configure text settings
-    context.textAlign = 'center'
-    context.textBaseline = 'middle'
-
-    // Draw scripture text
-    const maxWidth = canvas.width * 0.8
-    const lineHeight = 50
-    const words = covenant.scripture.split(' ')
-    let line = ''
-    let lines = []
-
-    context.font = '40px serif'
-    context.fillStyle = '#E9CB78'
-
-    // Word wrap
-    words.forEach((word) => {
-      const testLine = line + word + ' '
-      const metrics = context.measureText(testLine)
-      if (metrics.width > maxWidth) {
-        lines.push(line)
-        line = word + ' '
-      } else {
-        line = testLine
-      }
-    })
-    lines.push(line)
-
-    // Calculate total height and starting Y position
-    const totalTextHeight = lines.length * lineHeight
-    let startY = (canvas.height - totalTextHeight) / 2
-
-    // Draw each line
-    lines.forEach((line, index) => {
-      context.fillText(
-        line.trim(),
-        canvas.width / 2,
-        startY + index * lineHeight
-      )
-    })
-
-    // Draw reference
-    context.font = 'bold 30px serif'
-    context.fillStyle = '#A5722D'
-    context.fillText(
-      covenant.reference,
-      canvas.width / 2,
-      startY + totalTextHeight + 40
-    )
-  }
-
   const handleSave = () => {
     if (selectedImage === null || !selectedCovenant) {
       alert('Please select a covenant and background image first.')
@@ -147,12 +92,38 @@ const CovenantSelectionPage = () => {
     }
 
     const canvas = document.createElement('canvas')
+    const context = canvas.getContext('2d')
     const image = new Image()
-    image.crossOrigin = 'anonymous'
-    image.src = backgroundImages[selectedImage]
 
+    image.crossOrigin = 'anonymous'
+
+    image.src = backgroundImages[selectedImage]
     image.onload = () => {
-      createCanvasWithText(image, selectedCovenant, canvas)
+      canvas.width = 1080
+      canvas.height = 1080
+
+      context.drawImage(image, 0, 0, canvas.width, canvas.height)
+
+      context.fillStyle = '#000000a0'
+      context.fillRect(0, canvas.height / 3, canvas.width, canvas.height / 3)
+
+      context.fillStyle = '#E9CB78'
+      context.font = '40px serif'
+      context.textAlign = 'center'
+      context.fillText(
+        selectedCovenant.scripture,
+        canvas.width / 2,
+        canvas.height / 2
+      )
+
+      context.fillStyle = '#A5722D'
+      context.font = 'bold 30px serif'
+      context.fillText(
+        selectedCovenant.reference,
+        canvas.width / 2,
+        canvas.height / 2 + 50
+      )
+
       const dataURL = canvas.toDataURL('image/png')
       const link = document.createElement('a')
       link.href = dataURL
@@ -163,6 +134,19 @@ const CovenantSelectionPage = () => {
     }
   }
 
+  const dataURLtoBlob = (dataURL) => {
+    const parts = dataURL.split(';base64,')
+    const byteString = atob(parts[1])
+    const mimeType = parts[0].split(':')[1]
+
+    const arrayBuffer = new Uint8Array(byteString.length)
+    for (let i = 0; i < byteString.length; i++) {
+      arrayBuffer[i] = byteString.charCodeAt(i)
+    }
+
+    return new Blob([arrayBuffer], { type: mimeType })
+  }
+
   const handleShare = () => {
     if (selectedImage === null || !selectedCovenant) {
       alert('Please select a covenant and background image first.')
@@ -170,22 +154,45 @@ const CovenantSelectionPage = () => {
     }
 
     const canvas = document.createElement('canvas')
+    const context = canvas.getContext('2d')
     const image = new Image()
     image.crossOrigin = 'anonymous'
     image.src = backgroundImages[selectedImage]
-
     image.onload = () => {
-      createCanvasWithText(image, selectedCovenant, canvas)
+      canvas.width = 1080
+      canvas.height = 1080
+
+      context.drawImage(image, 0, 0, canvas.width, canvas.height)
+
+      context.fillStyle = '#000000a0'
+      context.fillRect(0, canvas.height / 3, canvas.width, canvas.height / 3)
+
+      context.fillStyle = '#E9CB78'
+      context.font = '40px serif'
+      context.textAlign = 'center'
+      context.fillText(
+        selectedCovenant.scripture,
+        canvas.width / 2,
+        canvas.height / 2
+      )
+
+      context.fillStyle = '#A5722D'
+      context.font = 'bold 30px serif'
+      context.fillText(
+        selectedCovenant.reference,
+        canvas.width / 2,
+        canvas.height / 2 + 50
+      )
+
       const dataURL = canvas.toDataURL('image/png')
 
       if (navigator.share) {
-        const blob = dataURLtoBlob(dataURL)
         navigator
           .share({
             title: 'My Covenant Image',
             text: 'Check out this beautiful covenant scripture!',
             files: [
-              new File([blob], 'covenant-image.png', {
+              new File([dataURLtoBlob(dataURL)], 'covenant-image.png', {
                 type: 'image/png',
               }),
             ],
@@ -199,17 +206,6 @@ const CovenantSelectionPage = () => {
           .catch((error) => console.error('Error copying link:', error))
       }
     }
-  }
-
-  const dataURLtoBlob = (dataURL) => {
-    const parts = dataURL.split(';base64,')
-    const byteString = atob(parts[1])
-    const mimeType = parts[0].split(':')[1]
-    const arrayBuffer = new Uint8Array(byteString.length)
-    for (let i = 0; i < byteString.length; i++) {
-      arrayBuffer[i] = byteString.charCodeAt(i)
-    }
-    return new Blob([arrayBuffer], { type: mimeType })
   }
 
   const getCategoryColor = (category) => {
@@ -253,13 +249,12 @@ const CovenantSelectionPage = () => {
         <img
           src="https://res.cloudinary.com/dnu6az3um/image/upload/v1735667894/logo_etgyhi.png"
           className="px-8"
-          alt="Logo"
         />
         <h1 className="text-4xl font-neuemachina text-center mb-2 font-bold mt-8 text-black-900">
           The Transfiguration City Of God Church
         </h1>
       </div>
-      <h1 className="text-3xl text-center mb-8 mt-8 text-black-900">
+      <h1 className="text-3xl  text-center mb-8 mt-8 text-black-900">
         2025 Covenant Selection
       </h1>
       <p className="text-center mb-8 text-black-600">
@@ -345,7 +340,7 @@ const CovenantSelectionPage = () => {
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 mt-12 lg:grid-cols-3 gap-6">
-        {covenants.map((covenant) => (
+        {filteredCovenants.map((covenant) => (
           <Card
             key={covenant.id}
             className={`relative hover:shadow-lg transition-shadow ${
@@ -362,21 +357,15 @@ const CovenantSelectionPage = () => {
                     covenant.category
                   )}`}
                 >
-                  {covenant.category}
+                  {/* {covenant.category} */}
                 </span>
                 <span className="text-sm font-medium text-white">
-                  {selectedCovenant?.id === covenant.id
-                    ? covenant.reference
-                    : '***'}
+                  {covenant.reference}
                 </span>
               </div>
             </CardHeader>
             <CardContent>
-              <p className="text-sm mb-2 text-white">
-                {selectedCovenant?.id === covenant.id
-                  ? covenant.scripture
-                  : '*** Hidden until selected ***'}
-              </p>
+              <p className="text-sm mb-2 text-white">{covenant.scripture}</p>
             </CardContent>
             <CardFooter className="justify-between">
               {takenCovenants.includes(covenant.id) &&
@@ -396,7 +385,7 @@ const CovenantSelectionPage = () => {
                   className={
                     selectedCovenant?.id === covenant.id
                       ? `${getCategoryColor(covenant.category)} border-2`
-                      : 'hover:bg-[#A5722D] bg-black text-white'
+                      : 'hover:bg-[#A5722D] bg-black'
                   }
                 >
                   {selectedCovenant?.id === covenant.id ? 'Selected' : 'Select'}
@@ -407,9 +396,12 @@ const CovenantSelectionPage = () => {
         ))}
       </div>
 
-      {error && (
-        <Alert className="mt-4 border-red-200 bg-red-50">
-          <AlertDescription className="text-red-800">{error}</AlertDescription>
+      {showAlert && (
+        <Alert className="mt-4 border-blue-200 bg-blue-50">
+          <AlertDescription className="text-blue-800">
+            Photo captured successfully! You can now share it or save to your
+            gallery.
+          </AlertDescription>
         </Alert>
       )}
     </div>
