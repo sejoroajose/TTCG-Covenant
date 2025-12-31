@@ -267,7 +267,7 @@ const CovenantSelectionPage = () => {
         {step === 1 && (
           <div className="animate-fadeIn">
             <div className="text-center mb-12">
-              <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">Receive Your Divine Covenant</h2>
+              <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">Choose your Covenant Scripture for 2026</h2>
               <p className="text-lg sm:text-xl text-gray-700 max-w-2xl mx-auto">
                 Click the sacred book to reveal your scripture for 2026
               </p>
@@ -279,17 +279,16 @@ const CovenantSelectionPage = () => {
                   className="relative cursor-pointer group"
                   onClick={handleCovenantSelect}
                 >
-                  <div className="absolute inset-0 bg-gray-800/10 rounded-3xl blur-2xl group-hover:bg-yellow-600/20 transition-all"></div>
+                  <div className="absolute inset-0 bg-gray-800/10  blur-2xl group-hover:bg-yellow-600/20 transition-all"></div>
                   <div className="relative bg-gradient-to-br from-gray-200 to-gray-300 rounded-3xl p-12 shadow-2xl border-4 border-gray-400 hover:border-yellow-600 transition-all">
                     <div className="flex flex-col items-center justify-center space-y-6">
                       <div 
                         className={`w-48 h-48 flex items-center justify-center ${isShuffling ? 'animate-pulse' : ''}`}
                       >
                         <DotLottieReact
-                          src="https://app.lottiefiles.com/share/9fd76857-6cec-43f1-9768-b3e10f37df9d"
+                          src="https://lottie.host/ff8c140b-1584-47b6-a4de-1c2d4c7053bc/EuqxRNpRB1.lottie"
                           loop
                           autoplay
-                          style={{ width: '100%', height: '100%' }}
                         />
                       </div>
                       
