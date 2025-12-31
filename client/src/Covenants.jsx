@@ -11,7 +11,7 @@ const backgroundImages = [
   'https://res.cloudinary.com/dnu6az3um/image/upload/v1735667893/wallpapper1_fnwlov.jpg',
 ]
 
-const API_URL = 'http://localhost:8080/covenants'
+const API_URL = 'https://ttcg-covenant-new.onrender.com/covenants'
 const LOGO_URL = 'https://res.cloudinary.com/dnu6az3um/image/upload/v1735667894/logo_etgyhi.png'
 
 const CovenantSelectionPage = () => {
