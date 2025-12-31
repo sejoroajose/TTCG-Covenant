@@ -1,281 +1,283 @@
-const pg = require('pg')
+const pg = require('pg');
 
 const data = [
   {
     id: 1,
-    scripture:
-      'For I know the plans I have for you, declares the Lord, plans for welfare and not for evil, to give you a future and a hope.',
-    reference: 'Jeremiah 29:11',
-    category: 'Promise',
+    scripture: "Call to Me, and I will answer you, and show you great and mighty things, which you do not know.",
+    reference: "Jeremiah 33:3 (NKJV)",
+    category: "Promise",
   },
   {
     id: 2,
-    scripture: 'I can do all things through him who strengthens me.',
-    reference: 'Philippians 4:13',
-    category: 'Strength',
+    scripture: "Clothe yourselves with the full armor of God so that you may be able to stand against the schemes of the devil.",
+    reference: "Ephesians 6:11 (NET)",
+    category: "Promise",
   },
   {
     id: 3,
-    scripture:
-      'But they who wait for the Lord shall renew their strength; they shall mount up with wings like eagles; they shall run and not be weary; they shall walk and not faint.',
-    reference: 'Isaiah 40:31',
-    category: 'Strength',
+    scripture: "For You, Lord, will bless the righteous; with favour will you compass him as with a shield.",
+    reference: "Psalm 5:12",
+    category: "Promise",
   },
   {
     id: 4,
-    scripture: 'The Lord is my shepherd; I shall not want.',
-    reference: 'Psalm 23:1',
-    category: 'Provision',
+    scripture: "I have set the Lord always before me: because He is at my right hand, I shall not be moved. Therefore my heart is glad, and my tongue rejoices: my body also shall dwell secure.",
+    reference: "Psalm 16:8-9",
+    category: "Promise",
   },
   {
     id: 5,
-    scripture:
-      'And we know that in all things God works for the good of those who love him, who have been called according to his purpose.',
-    reference: 'Romans 8:28',
-    category: 'Promise',
+    scripture: "The eternal God is your refuge, and underneath are the everlasting arms: and He shall thrust out the enemy from before you; and shall say, “Destroy them.”",
+    reference: "Deuteronomy 33:27",
+    category: "Promise",
   },
   {
     id: 6,
-    scripture:
-      'Fear not, for I am with you; be not dismayed, for I am your God; I will strengthen you, I will help you, I will uphold you with my righteous right hand.',
-    reference: 'Isaiah 41:10',
-    category: 'Protection',
+    scripture: "I have raised him up in righteousness, and I will direct all his ways; he shall build My city and let My exiles go free, not for price nor reward,” says the Lord of Hosts.",
+    reference: "Isaiah 45:13",
+    category: "Promise",
   },
   {
     id: 7,
-    scripture:
-      'Come to me, all who labor and are heavy laden, and I will give you rest. Take my yoke upon you, and learn from me, for I am gentle and lowly in heart, and you will find rest for your souls. For my yoke is easy, and my burden is light.',
-    reference: 'Matthew 11:28-30',
-    category: 'Peace',
+    scripture: "Thus says the Lord, your Redeemer, the Holy One of Israel: I am the Lord your God, Who teaches you to profit, Who leads you by the way you should go.",
+    reference: "Isaiah 48:17",
+    category: "Promise",
   },
   {
     id: 8,
-    scripture: 'For we walk by faith, not by sight.',
-    reference: '2 Corinthians 5:7',
-    category: 'Faith',
+    scripture: "But the Lord is faithful, who shall stablish you, and keep you from evil.",
+    reference: "2 Thessalonians 3:3",
+    category: "Promise",
   },
   {
     id: 9,
-    scripture:
-      'Trust in the Lord with all your heart, and do not lean on your own understanding. In all your ways acknowledge him, and he will make straight your paths.',
-    reference: 'Proverbs 3:5-6',
-    category: 'Guidance',
+    scripture: "Being confident of this very thing, that He which has begun a good work in you will perform it until the day of Jesus Christ.",
+    reference: "Philippians 1:6",
+    category: "Promise",
   },
   {
     id: 10,
-    scripture:
-      'God is our refuge and strength, a very present help in trouble.',
-    reference: 'Psalm 46:1',
-    category: 'Protection',
+    scripture: "And I give unto them eternal life; and they shall never perish, neither shall any man pluck them out of My hand. My Father, which gave them to Me, is greater than all; and no man is able to pluck them out of My Father’s hand.",
+    reference: "John 10:28-29",
+    category: "Promise",
   },
   {
     id: 11,
-    scripture:
-      'May the God of hope fill you with all joy and peace in believing, so that by the power of the Holy Spirit you may abound in hope.',
-    reference: 'Romans 15:13',
-    category: 'Hope',
+    scripture: "Are not two sparrows sold for a farthing? One of them shall not fall on the ground apart from your Father’s will. But the very hairs of your head are numbered. Fear you not therefore, you are of more value than many sparrows.",
+    reference: "Matthew 10:29-31",
+    category: "Promise",
   },
   {
     id: 12,
-    scripture: 'I will never leave you nor forsake you.',
-    reference: 'Hebrews 13:5',
-    category: 'Promise',
+    scripture: "No weapon that is formed against you shall prosper; and every tongue that shall rise against you in judgment you shall condemn. This is the heritage of the servants of the Lord, and their righteousness is of Me,” says the Lord.",
+    reference: "Isaiah 54:17",
+    category: "Promise",
   },
   {
     id: 13,
-    scripture:
-      'Peace I leave with you; my peace I give to you. Not as the world gives do I give to you. Let not your hearts be troubled, neither let them be afraid.',
-    reference: 'John 14:27',
-    category: 'Peace',
+    scripture: "But now says the Lord that created you, O Jacob, and He that formed you O Israel. Fear not: for I have redeemed you, I have called you by your name; you are Mine. When you pass through the waters, I will be with you; and through the rivers, they shall not overflow you: when you walk through the fire, you shall not be burned: neither shall the flame kindle upon you. For I am the Lord your God, the Holy One of Israel, your Saviour: I gave Egypt for your ransom, Ethiopia and Seba for you.",
+    reference: "Isaiah 43:1-3",
+    category: "Promise",
   },
   {
     id: 14,
-    scripture:
-      'For my thoughts are not your thoughts, neither are your ways my ways, declares the Lord. For as the heavens are higher than the earth, so are my ways higher than your ways and my thoughts than your thoughts.',
-    reference: 'Isaiah 55:8-9',
-    category: 'Sovereignty',
+    scripture: "I have come into the world as light, so that no one who believes in me should stay in darkness.",
+    reference: "John 12:46",
+    category: "Promise",
   },
   {
     id: 15,
-    scripture: 'Casting all your anxieties on him, because he cares for you.',
-    reference: '1 Peter 5:7',
-    category: 'Care',
+    scripture: "Yet to all who received him, to those who believed in his name, he gave the right to become children of God.",
+    reference: "John 1:12",
+    category: "Promise",
   },
   {
     id: 16,
-    scripture:
-      'What then shall we say to these things? If God is for us, who can be against us?',
-    reference: 'Romans 8:31',
-    category: 'Confidence',
+    scripture: "Know therefore that the Lord your God is God; he is the faithful God, keeping his covenant of love to a thousand generations of those who love him and keep his commands.",
+    reference: "Deuteronomy 7:9",
+    category: "Promise",
   },
   {
     id: 17,
-    scripture:
-      'The Lord is near to the brokenhearted and saves the crushed in spirit.',
-    reference: 'Psalm 34:18',
-    category: 'Comfort',
+    scripture: "Though the mountains be shaken and the hills be moved, yet my unfailing love for you will not be shaken nor my covenant of peace be removed.",
+    reference: "Isaiah 54:10",
+    category: "Promise",
   },
   {
     id: 18,
-    scripture:
-      'The name of the Lord is a strong tower; the righteous man runs into it and is safe.',
-    reference: 'Proverbs 18:10',
-    category: 'Protection',
+    scripture: "I will instruct you and teach you in the way you should go; I will counsel you and watch over you.",
+    reference: "Psalm 32:8",
+    category: "Promise",
   },
   {
     id: 19,
-    scripture:
-      'I lift up my eyes to the hills. From where does my help come? My help comes from the Lord, who made heaven and earth.',
-    reference: 'Psalm 121:1-2',
-    category: 'Help',
+    scripture: "I will lead the blind by ways they have not known, along unfamiliar paths I will guide them, I will turn the darkness into light before them and make the rough places smooth. These are the things I will do; I will not forsake them.",
+    reference: "Isaiah 42:16",
+    category: "Promise",
   },
   {
     id: 20,
-    scripture:
-      'Finally, be strong in the Lord and in the strength of his might.',
-    reference: 'Ephesians 6:10',
-    category: 'Strength',
+    scripture: "but I will see you again and you will rejoice, and no one will take away your joy.",
+    reference: "John 16:22",
+    category: "Promise",
   },
   {
     id: 21,
-    scripture:
-      'Be strong and courageous. Do not fear or be in dread of them, for it is the Lord your God who goes with you. He will not leave you or forsake you.',
-    reference: 'Deuteronomy 31:6',
-    category: 'Courage',
+    scripture: "For through me your days will be many, and years will be added to your life.",
+    reference: "Proverbs 9:11",
+    category: "Promise",
   },
   {
     id: 22,
-    scripture:
-      'The Lord is my rock and my fortress and my deliverer, my God, my rock, in whom I take refuge, my shield, and the horn of my salvation, my stronghold.',
-    reference: 'Psalm 18:2',
-    category: 'Protection',
+    scripture: "Even to your old age and gray hairs I am he, I am he who will sustain you. I have made you and I will carry you; I will sustain you and I will rescue you.",
+    reference: "Isaiah 46:4",
+    category: "Promise",
   },
   {
     id: 23,
-    scripture:
-      'The steadfast love of the Lord never ceases; his mercies never come to an end; they are new every morning; great is your faithfulness.',
-    reference: 'Lamentations 3:22-23',
-    category: 'Faithfulness',
+    scripture: "I have loved you with an everlasting love; I have drawn you with loving-kindness.",
+    reference: "Jeremiah 31:3",
+    category: "Promise",
   },
   {
     id: 24,
-    scripture:
-      'Therefore do not be anxious about tomorrow, for tomorrow will be anxious for itself. Sufficient for the day is its own trouble.',
-    reference: 'Matthew 6:34',
-    category: 'Peace',
+    scripture: "No eye has seen, no ear has heard, no mind has conceived what God has prepared for those who love him.",
+    reference: "1 Corinthians 2:9",
+    category: "Promise",
   },
   {
     id: 25,
-    scripture:
-      'No temptation has overtaken you that is not common to man. God is faithful, and he will not let you be tempted beyond your ability, but with the temptation, he will also provide the way of escape, that you may be able to endure it.',
-    reference: '1 Corinthians 10:13',
-    category: 'Faithfulness',
+    scripture: "the Lord longs to be gracious to you; he rises to show you compassion. For the Lord is a God of justice. Blessed are all who wait for him!",
+    reference: "Isaiah 30:18",
+    category: "Promise",
   },
   {
     id: 26,
-    scripture:
-      'If any of you lacks wisdom, let him ask of God, who gives to all liberally and without reproach, and it will be given to him.',
-    reference: 'James 1:5',
-    category: 'Wisdom',
+    scripture: "As a father has compassion on his children, so the Lord has compassion on those who fear him.",
+    reference: "Psalm 103:13",
+    category: "Promise",
   },
   {
     id: 27,
-    scripture:
-      'Delight yourself in the Lord, and he will give you the desires of your heart.',
-    reference: 'Psalm 37:4',
-    category: 'Joy',
+    scripture: "Peace I leave with you, my peace I give you. I do not give as the world gives. Do not let your hearts be troubled and do not be afraid.",
+    reference: "John 14:27",
+    category: "Promise",
   },
   {
     id: 28,
-    scripture:
-      'Not only that, but we rejoice in our sufferings, knowing that suffering produces endurance, and endurance produces character, and character produces hope.',
-    reference: 'Romans 5:3-4',
-    category: 'Endurance',
+    scripture: "Before they call I will answer; while they are still speaking I will hear.",
+    reference: "Isaiah 65:24",
+    category: "Promise",
   },
   {
     id: 29,
-    scripture:
-      'This God—his way is perfect; the word of the Lord proves true; he is a shield for all those who take refuge in him.',
-    reference: '2 Samuel 22:31',
-    category: 'Trust',
+    scripture: "Then you will call upon me and come and pray to me, and I will listen to you.",
+    reference: "Jeremiah 29:12",
+    category: "Promise",
   },
   {
     id: 30,
-    scripture:
-      'There is no fear in love, but perfect love casts out fear. For fear has to do with punishment, and whoever fears has not been perfected in love.',
-    reference: '1 John 4:18',
-    category: 'Love',
+    scripture: "The Lord will keep you from all harm–he will watch over your life; the Lord will watch over your coming and going both now and forevermore.",
+    reference: "Psalm 121:7-8",
+    category: "Promise",
   },
   {
     id: 31,
-    scripture:
-      'You keep him in perfect peace whose mind is stayed on you, because he trusts in you.',
-    reference: 'Isaiah 26:3',
-    category: 'Peace',
+    scripture: "This is the assurance we have in approaching God; that if we ask anything according to his will, he hears us.",
+    reference: "1 John 5:14",
+    category: "Promise",
   },
   {
     id: 32,
-    scripture:
-      'Ask, and it will be given to you; seek, and you will find; knock, and it will be opened to you.',
-    reference: 'Matthew 7:7',
-    category: 'Promise',
+    scripture: "When you pass through the waters, I will be with you; and when you pass through the rivers, they will not sweep over you. When you walk through the fire, you will not be burned; the flames will not set you ablaze.",
+    reference: "Isaiah 43:1-2",
+    category: "Promise",
   },
   {
     id: 33,
-    scripture:
-      'Therefore, since we are surrounded by so great a cloud of witnesses, let us also lay aside every weight, and sin which clings so closely, and let us run with endurance the race that is set before us, looking to Jesus, the founder and perfecter of our faith.',
-    reference: 'Hebrews 12:1-2',
-    category: 'Faith',
+    scripture: "But whoever listens to me will live in safety and be at ease, without fear of harm.",
+    reference: "Proverbs 1:33",
+    category: "Promise",
   },
   {
     id: 34,
-    scripture:
-      'Whatever you do, work heartily, as for the Lord and not for men.',
-    reference: 'Colossians 3:23',
-    category: 'Work',
+    scripture: "Therefore, if anyone is in Christ, he is a new creation; the old has gone, the new has come!",
+    reference: "2 Corinthians 5:17",
+    category: "Promise",
   },
   {
     id: 35,
-    scripture: 'Seek the Lord and his strength; seek his presence continually!',
-    reference: '1 Chronicles 16:11',
-    category: 'Strength',
+    scripture: "That everyone may eat and drink, and find satisfaction in all his toil–this is the gift of God.",
+    reference: "Ecclesiastes 3:13",
+    category: "Promise",
   },
   {
     id: 36,
-    scripture:
-      'The Lord your God is in your midst, a mighty one who will save; he will rejoice over you with gladness; he will quiet you by his love; he will exult over you with loud singing.',
-    reference: 'Zephaniah 3:17',
-    category: 'Joy',
+    scripture: "Trust in the Lord with all your heart and lean not on your own understanding; in all your ways acknowledge him, and he will make your paths straight.",
+    reference: "Proverbs 3:5-6",
+    category: "Promise",
   },
   {
     id: 37,
-    scripture:
-      'You are the light of the world. A city set on a hill cannot be hidden. Nor do people light a lamp and put it under a basket, but on a stand, and it gives light to all in the house. In the same way, let your light shine before others, so that they may see your good works and give glory to your Father who is in heaven.',
-    reference: 'Matthew 5:14-16',
-    category: 'Witness',
+    scripture: "With me are riches and honor, enduring wealth and prosperity. My fruit is better than fine gold; what I yield surpasses choice silver.",
+    reference: "Proverbs 8:18-19",
+    category: "Promise",
   },
   {
     id: 38,
-    scripture:
-      'Do not be conformed to this world, but be transformed by the renewal of your mind, that by testing you may discern what is the will of God, what is good and acceptable and perfect.',
-    reference: 'Romans 12:2',
-    category: 'Transformation',
+    scripture: "For the Lord gives wisdom, and from his mouth come knowledge and understanding.",
+    reference: "Proverbs 2:6",  // Note: Original said 2:5, likely a typo; common reference is 2:6
+    category: "Promise",
   },
   {
     id: 39,
-    scripture:
-      'I have said these things to you, that in me you may have peace. In the world you will have tribulation. But take heart; I have overcome the world.',
-    reference: 'John 16:33',
-    category: 'Peace',
+    scripture: "Blessed is the man who makes the Lord his trust….",
+    reference: "Psalm 40:4",
+    category: "Promise",
   },
   {
     id: 40,
-    scripture:
-      'For you formed my inward parts; you knitted me together in my mother’s womb. I praise you, for I am fearfully and wonderfully made. Wonderful are your works; my soul knows it very well.',
-    reference: 'Psalm 139:13-14',
-    category: 'Creation',
+    scripture: "Fix these words of mine in your hearts and minds; tie them as symbols on your hands and bind them on your foreheads.",
+    reference: "Deuteronomy 11:18",
+    category: "Promise",
   },
-]
+  {
+    id: 41,
+    scripture: "Your word is a lamp to my feet and a light for my path.",
+    reference: "Psalm 119:105",
+    category: "Promise",
+  },
+  {
+    id: 42,
+    scripture: "Now I commit you to God and to the word of his grace, which can build you up and give you an inheritance among all those who are sanctified.",
+    reference: "Acts 20:32",
+    category: "Promise",
+  },
+  {
+    id: 43,
+    scripture: "God shall supply all your need according to His riches in glory by Christ Jesus.",
+    reference: "Philippians 4:19",
+    category: "Promise",
+  },
+  {
+    id: 44,
+    scripture: "Fear not, for I have redeemed you, I have called you by your name; you are mine.",
+    reference: "Isaiah 43:1",
+    category: "Promise",
+  },
+  {
+    id: 45,
+    scripture: "Believe on the Lord Jesus Christ, and you will be saved–you and your household.",
+    reference: "Acts 16:31",
+    category: "Promise",
+  },
+  {
+    id: 46,
+    scripture: "God will redeem my soul from the power of the grave; for He shall receive me.",
+    reference: "Psalm 49:15",
+    category: "Promise",
+  },
+];
 
 const config = {
   user: 'avnadmin',
