@@ -317,10 +317,24 @@ QodqdTKhsPxoviGsXAEYIg/eKohYSLgGU73bGEzgMbXUl9D28A==
 
 const client = new pg.Client(config)
 
-
-async function seedDatabase() {
+// Function to delete all existing data
+async function deleteAllData() {
   try {
     await client.connect()
+    await client.query('DELETE FROM covenants')
+    console.log('All existing data deleted successfully.')
+  } catch (err) {
+    console.error('Error deleting data:', err)
+  }
+}
+
+// Function to seed database
+async function seedDatabase() {
+  try {
+    if (!client._connected) {
+      await client.connect()
+    }
+    
     for (const entry of data) {
       await client.query(
         'INSERT INTO covenants (id, scripture, reference, category) VALUES ($1, $2, $3, $4)',
@@ -335,4 +349,43 @@ async function seedDatabase() {
   }
 }
 
-seedDatabase()
+// Function to reset database (delete + reseed)
+async function resetDatabase() {
+  try {
+    await client.connect()
+    await client.query('DELETE FROM covenants')
+    console.log('All existing data deleted.')
+    
+    // Reset the sequence for auto-incrementing IDs
+    await client.query('ALTER SEQUENCE covenants_id_seq RESTART WITH 1')
+    
+    for (const entry of data) {
+      await client.query(
+        'INSERT INTO covenants (id, scripture, reference, category, is_selected) VALUES ($1, $2, $3, $4, $5)',
+        [entry.id, entry.scripture, entry.reference, entry.category, false]
+      )
+    }
+    console.log('Database reset and reseeded successfully.')
+  } catch (err) {
+    console.error('Error resetting database:', err)
+  } finally {
+    await client.end()
+  }
+}
+
+// Check command line argument
+const command = process.argv[2]
+
+if (command === 'delete') {
+  deleteAllData()
+} else if (command === 'seed') {
+  seedDatabase()
+} else if (command === 'reset') {
+  resetDatabase()
+} else {
+  console.log('Usage:')
+  console.log('  node seed.js seed   - Seed the database with data')
+  console.log('  node seed.js delete - Delete all existing data')
+  console.log('  node seed.js reset  - Delete and reseed the database')
+  process.exit(0)
+}

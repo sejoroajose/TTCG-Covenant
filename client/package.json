@@ -11,6 +11,7 @@
     "proxy": "http://localhost:8080"
   },
   "dependencies": {
+    "@lottiefiles/dotlottie-react": "^0.17.12",
     "@radix-ui/react-slot": "^1.1.1",
     "axios": "^1.7.9",
     "class-variance-authority": "^0.7.1",

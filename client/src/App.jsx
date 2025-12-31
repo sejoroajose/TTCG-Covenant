@@ -3,7 +3,7 @@ import CovenantSelectionPage from './Covenants'
 
 function App() {
   return (
-    <div className="min-h-screen bg-white py-8">
+    <div className="min-h-screen bg-white">
       <CovenantSelectionPage />
     </div>
   )
