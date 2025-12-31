@@ -291,9 +291,9 @@ const CovenantSelectionPage = () => {
                 </span>
               </div>
               <h2 className="text-5xl sm:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-                Choose a Scriptural<br />
+                Choose a Covenant<br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-600 to-amber-700">
-                  Covenant
+                  Scripture
                 </span>
               </h2>
               <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
@@ -396,13 +396,13 @@ const CovenantSelectionPage = () => {
                       onClick={handleReShuffle}
                       className="bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-4 px-6 rounded-xl transition-all duration-200 border border-gray-300 hover:border-gray-400"
                     >
-                      Reveal Another
+                      Start Again
                     </button>
                     <button
                       onClick={handleAcceptCovenant}
                       className="bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 text-white font-bold py-4 px-6 rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl"
                     >
-                      <span>Accept This Covenant</span>
+                      <span>Accept This Covenant Scripture</span>
                       <ChevronRight className="w-5 h-5" />
                     </button>
                   </div>
@@ -420,7 +420,7 @@ const CovenantSelectionPage = () => {
                   🎨 Personalize
                 </span>
               </div>
-              <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">Customize Your Covenant</h2>
+              <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">Customize Your Covenant Scripture</h2>
               <p className="text-lg sm:text-xl text-gray-600">Choose a background and add your personal touch</p>
             </div>
 
@@ -545,8 +545,8 @@ const CovenantSelectionPage = () => {
                   🎉 Complete
                 </span>
               </div>
-              <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">Your Covenant is Ready!</h2>
-              <p className="text-lg sm:text-xl text-gray-600">Download or share your personalized covenant</p>
+              <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">Your Covenant Scripture is Ready!</h2>
+              <p className="text-lg sm:text-xl text-gray-600">Download or share your personalized covenant scripture</p>
             </div>
 
             <div className="bg-white backdrop-blur-xl rounded-3xl shadow-2xl p-6 sm:p-10 max-w-5xl mx-auto border border-yellow-200/50">
@@ -600,7 +600,7 @@ const CovenantSelectionPage = () => {
                 }}
                 className="w-full mt-6 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-4 px-6 rounded-xl transition-all"
               >
-                Create Another Covenant
+                Choose Another Covenant Scripture
               </button>
             </div>
           </div>
