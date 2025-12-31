@@ -58,7 +58,7 @@ const CovenantSelectionPage = () => {
     // Simulate shuffle with staggered animation
     setTimeout(() => {
       selectRandomCovenant()
-    }, 2000)
+    }, 1000)
   }
 
   const selectRandomCovenant = async () => {
