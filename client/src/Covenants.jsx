@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect, useRef } from 'react'
-import { Image, Share2, Download, Check, ChevronRight, Sparkles, Heart } from 'lucide-react'
+import { Image, Share2, Download, Check, ChevronRight, Sparkles, Heart, BookOpen, Loader2 } from 'lucide-react'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react'
 
 const backgroundImages = [
@@ -22,6 +23,7 @@ const CovenantSelectionPage = () => {
   const [loading, setLoading] = useState(true)
   const [isShuffling, setIsShuffling] = useState(false)
   const [revealedCovenant, setRevealedCovenant] = useState(null)
+  const [animationError, setAnimationError] = useState(false)
   const logoRef = useRef(null)
   const shuffleContainerRef = useRef(null)
 
@@ -37,7 +39,9 @@ const CovenantSelectionPage = () => {
         setCovenants([
           { id: 1, scripture: "For I know the plans I have for you, declares the Lord, plans to prosper you and not to harm you, plans to give you hope and a future.", reference: "Jeremiah 29:11" },
           { id: 2, scripture: "Trust in the Lord with all your heart and lean not on your own understanding.", reference: "Proverbs 3:5" },
-          { id: 3, scripture: "I can do all things through Christ who strengthens me.", reference: "Philippians 4:13" }
+          { id: 3, scripture: "I can do all things through Christ who strengthens me.", reference: "Philippians 4:13" },
+          { id: 4, scripture: "The Lord is my shepherd; I shall not want.", reference: "Psalm 23:1" },
+          { id: 5, scripture: "Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go.", reference: "Joshua 1:9" }
         ])
       } finally {
         setLoading(false)
@@ -54,7 +58,7 @@ const CovenantSelectionPage = () => {
     // Simulate shuffle with staggered animation
     setTimeout(() => {
       selectRandomCovenant()
-    }, 1500)
+    }, 2000)
   }
 
   const selectRandomCovenant = async () => {
@@ -217,45 +221,59 @@ const CovenantSelectionPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-yellow-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-gray-800 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-900 text-lg font-medium">Loading Covenants...</p>
+          <div className="relative w-24 h-24 mx-auto mb-6">
+            <div className="absolute inset-0 border-4 border-yellow-200 rounded-full"></div>
+            <div className="absolute inset-0 border-4 border-yellow-600 border-t-transparent rounded-full animate-spin"></div>
+            <BookOpen className="absolute inset-0 m-auto w-10 h-10 text-yellow-600" />
+          </div>
+          <p className="text-gray-900 text-xl font-semibold mb-2">Loading Divine Covenants...</p>
+          <p className="text-gray-600 text-sm">Preparing your sacred scriptures</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-yellow-50">
       <img ref={logoRef} src={LOGO_URL} alt="Logo" className="hidden" crossOrigin="anonymous" />
       
-      <header className="bg-white/30 backdrop-blur-sm border-b border-gray-400 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <header className="bg-white/80 backdrop-blur-md border-b border-yellow-200/50 sticky top-0 z-50 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <img 
-                src={LOGO_URL} 
-                alt="Logo" 
-                className="w-16 h-16 object-contain"
-              />
+              <div className="relative">
+                <div className="absolute inset-0 bg-yellow-400 rounded-full blur-lg opacity-30"></div>
+                <img 
+                  src={LOGO_URL} 
+                  alt="Logo" 
+                  className="relative w-14 h-14 object-contain"
+                />
+              </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">TTCG</h1>
-                <p className="text-sm text-gray-700">Covenant Scripture Selection 2026</p>
+                <h1 className="text-2xl font-bold text-gray-900 tracking-tight">TTCG</h1>
+                <p className="text-xs text-gray-600 font-medium">Covenant Scripture 2026</p>
               </div>
             </div>
 
-            <div className="hidden sm:flex items-center space-x-2">
+            <div className="hidden sm:flex items-center space-x-3">
               {[1, 2, 3].map((s) => (
-                <div
-                  key={s}
-                  className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold transition-all ${
-                    step >= s
-                      ? 'bg-yellow-600 text-black shadow-lg scale-110'
-                      : 'bg-white text-gray-400 border-2 border-gray-300'
-                  }`}
-                >
-                  {step > s ? <Check className="w-5 h-5" /> : s}
+                <div key={s} className="flex items-center">
+                  <div
+                    className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 ${
+                      step >= s
+                        ? 'bg-gradient-to-br from-yellow-400 to-amber-600 text-white shadow-lg scale-110'
+                        : 'bg-gray-100 text-gray-400 border-2 border-gray-200'
+                    }`}
+                  >
+                    {step > s ? <Check className="w-5 h-5" /> : s}
+                  </div>
+                  {s < 3 && (
+                    <div className={`w-8 h-0.5 mx-1 transition-all duration-300 ${
+                      step > s ? 'bg-yellow-400' : 'bg-gray-200'
+                    }`} />
+                  )}
                 </div>
               ))}
             </div>
@@ -266,51 +284,84 @@ const CovenantSelectionPage = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {step === 1 && (
           <div className="animate-fadeIn">
-            <div className="text-center mb-12">
-              <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">Choose your Covenant Scripture for 2026</h2>
-              <p className="text-lg sm:text-xl text-gray-700 max-w-2xl mx-auto">
-                Click the sacred book to reveal your scripture for 2026
+            <div className="text-center mb-16">
+              <div className="inline-block mb-4">
+                <span className="px-4 py-2 bg-gradient-to-r from-yellow-400 to-amber-500 text-white text-sm font-bold rounded-full shadow-md">
+                  ✨ Divine Selection
+                </span>
+              </div>
+              <h2 className="text-5xl sm:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+                Choose a Scriptural<br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-600 to-amber-700">
+                  Covenant
+                </span>
+              </h2>
+              <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                Click the sacred book below to reveal your personal scripture for 2026
               </p>
             </div>
 
             {!revealedCovenant ? (
               <div className="max-w-2xl mx-auto">
                 <div 
-                  className="relative cursor-pointer group"
+                  className={`relative cursor-pointer group ${isShuffling ? 'pointer-events-none' : ''}`}
                   onClick={handleCovenantSelect}
                 >
-                  <div className="absolute inset-0 bg-gray-800/10  blur-2xl group-hover:bg-yellow-600/20 transition-all"></div>
-                  <div className="relative bg-gradient-to-br from-gray-200 to-gray-300 rounded-3xl p-12 shadow-2xl border-4 border-gray-400 hover:border-yellow-600 transition-all">
-                    <div className="flex flex-col items-center justify-center space-y-6">
+                  <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/20 to-amber-500/20 rounded-3xl blur-3xl group-hover:from-yellow-400/30 group-hover:to-amber-500/30 transition-all duration-500"></div>
+                  <div className="relative bg-white rounded-3xl p-16 shadow-2xl border border-yellow-200/50 group-hover:border-yellow-400 transition-all duration-300 group-hover:shadow-yellow-200/50">
+                    <div className="flex flex-col items-center justify-center space-y-8">
                       <div 
-                        className={`w-48 h-48 flex items-center justify-center ${isShuffling ? 'animate-pulse' : ''}`}
+                        className={`w-64 h-64 flex items-center justify-center relative ${isShuffling ? 'scale-110' : ''} transition-transform duration-500`}
                       >
-                        <DotLottieReact
-                          src="https://lottie.host/ff8c140b-1584-47b6-a4de-1c2d4c7053bc/EuqxRNpRB1.lottie"
-                          loop
-                          autoplay
-                        />
+                        {!animationError ? (
+                          <div className="w-full h-full">
+                            <DotLottieReact
+                              src="https://lottie.host/ff8c140b-1584-47b6-a4de-1c2d4c7053bc/EuqxRNpRB1.lottie"
+                              loop
+                              autoplay
+                              className="w-full h-full"
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-yellow-500 to-amber-600 rounded-3xl shadow-2xl">
+                            <BookOpen className="w-32 h-32 text-white drop-shadow-lg" strokeWidth={1.5} />
+                          </div>
+                        )}
+                        
+                        {isShuffling && (
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/20 to-amber-500/20 rounded-3xl animate-pulse"></div>
+                            <Loader2 className="w-16 h-16 text-yellow-600 animate-spin" />
+                          </div>
+                        )}
                       </div>
                       
-                      <div className="text-center">
-                        <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                      <div className="text-center space-y-3">
+                        <h3 className="text-3xl font-bold text-gray-900">
                           {isShuffling ? 'Revealing Your Covenant...' : 'Click to Receive'}
                         </h3>
-                        <p className="text-gray-600">
-                          {isShuffling ? 'The spirit is moving...' : 'Your divine scripture awaits'}
+                        <p className="text-gray-600 text-lg">
+                          {isShuffling ? 'The Holy Spirit is moving...' : 'Your divine scripture awaits'}
                         </p>
+                        {!isShuffling && (
+                          <div className="flex items-center justify-center space-x-2 text-yellow-600 text-sm font-semibold pt-2">
+                            <Sparkles className="w-4 h-4" />
+                            <span>Tap the book to begin</span>
+                            <Sparkles className="w-4 h-4" />
+                          </div>
+                        )}
                       </div>
 
                       {isShuffling && (
-                        <div ref={shuffleContainerRef} className="absolute inset-0 pointer-events-none flex items-center justify-center">
-                          {[...Array(5)].map((_, i) => (
+                        <div ref={shuffleContainerRef} className="absolute inset-0 pointer-events-none flex items-center justify-center overflow-hidden rounded-3xl">
+                          {[...Array(7)].map((_, i) => (
                             <div
                               key={i}
-                              className="shuffle-card absolute w-32 h-40 bg-gray-700/30 rounded-lg backdrop-blur-sm animate-shuffle"
+                              className="shuffle-card absolute w-40 h-48 bg-gradient-to-br from-yellow-400/30 to-amber-500/30 rounded-xl backdrop-blur-md border border-yellow-300/50 shadow-xl animate-shuffle"
                               style={{
-                                transform: `translateX(${(i - 2) * 20}px)`,
-                                zIndex: 5 - Math.abs(i - 2),
-                                animationDelay: `${i * 0.1}s`
+                                transform: `translateX(${(i - 3) * 25}px)`,
+                                zIndex: 7 - Math.abs(i - 3),
+                                animationDelay: `${i * 0.12}s`
                               }}
                             ></div>
                           ))}
@@ -321,27 +372,35 @@ const CovenantSelectionPage = () => {
                 </div>
               </div>
             ) : (
-              <div className="max-w-2xl mx-auto">
-                <div className="bg-white/50 backdrop-blur rounded-3xl shadow-2xl p-8 border-2 border-gray-300">
-                  <div className="bg-gray-700/30 rounded-2xl p-8 mb-8 backdrop-blur-sm">
-                    <p className="text-2xl sm:text-3xl font-serif text-gray-100 leading-relaxed mb-6 text-center">
+              <div className="max-w-3xl mx-auto animate-slideUp">
+                <div className="bg-white backdrop-blur-xl rounded-3xl shadow-2xl p-8 sm:p-10 border border-yellow-200/50">
+                  <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-8 sm:p-10 mb-8 relative overflow-hidden">
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-400"></div>
+                    <div className="absolute -top-20 -right-20 w-40 h-40 bg-yellow-400/10 rounded-full blur-3xl"></div>
+                    <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-amber-500/10 rounded-full blur-3xl"></div>
+                    
+                    <p className="text-2xl sm:text-3xl font-serif text-white leading-relaxed mb-8 text-center relative z-10">
                       "{revealedCovenant.scripture}"
                     </p>
-                    <p className="text-xl font-bold text-yellow-400 text-center">
-                      — {revealedCovenant.reference}
-                    </p>
+                    <div className="flex items-center justify-center space-x-2 relative z-10">
+                      <div className="h-px w-12 bg-gradient-to-r from-transparent to-yellow-400"></div>
+                      <p className="text-xl font-bold text-yellow-400">
+                        {revealedCovenant.reference}
+                      </p>
+                      <div className="h-px w-12 bg-gradient-to-l from-transparent to-yellow-400"></div>
+                    </div>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <button
                       onClick={handleReShuffle}
-                      className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-4 px-6 rounded-xl transition-all"
+                      className="bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-4 px-6 rounded-xl transition-all duration-200 border border-gray-300 hover:border-gray-400"
                     >
                       Reveal Another
                     </button>
                     <button
                       onClick={handleAcceptCovenant}
-                      className="flex-1 bg-gray-900 hover:bg-black text-white font-semibold py-4 px-6 rounded-xl transition-all flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl border-2 border-yellow-600"
+                      className="bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 text-white font-bold py-4 px-6 rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl"
                     >
                       <span>Accept This Covenant</span>
                       <ChevronRight className="w-5 h-5" />
@@ -356,30 +415,40 @@ const CovenantSelectionPage = () => {
         {step === 2 && selectedCovenant && (
           <div className="animate-fadeIn">
             <div className="text-center mb-12">
+              <div className="inline-block mb-4">
+                <span className="px-4 py-2 bg-gradient-to-r from-yellow-400 to-amber-500 text-white text-sm font-bold rounded-full shadow-md">
+                  🎨 Personalize
+                </span>
+              </div>
               <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">Customize Your Covenant</h2>
-              <p className="text-lg sm:text-xl text-gray-700">Choose a background and add your personal touch</p>
+              <p className="text-lg sm:text-xl text-gray-600">Choose a background and add your personal touch</p>
             </div>
 
-            <div className="bg-white/50 backdrop-blur rounded-3xl shadow-2xl p-6 sm:p-8 max-w-5xl mx-auto border-2 border-gray-300">
-              <div className="mb-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">Preview</h3>
+            <div className="bg-white backdrop-blur-xl rounded-3xl shadow-2xl p-6 sm:p-10 max-w-6xl mx-auto border border-yellow-200/50">
+              <div className="mb-10">
+                <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                  <div className="w-8 h-8 bg-gradient-to-br from-yellow-400 to-amber-500 rounded-lg flex items-center justify-center mr-3">
+                    <Image className="w-5 h-5 text-white" />
+                  </div>
+                  Preview
+                </h3>
                 {selectedImage !== null ? (
-                  <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+                  <div className="relative rounded-2xl overflow-hidden shadow-2xl border-2 border-yellow-200">
                     <img
                       src={backgroundImages[selectedImage]}
                       alt="Background"
-                      className="w-full h-[400px] sm:h-[500px] object-cover"
+                      className="w-full h-[450px] sm:h-[550px] object-cover"
                     />
-                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center p-6 sm:p-8">
-                      <div className="text-center max-w-3xl">
-                        <p className="text-2xl sm:text-3xl md:text-4xl font-serif text-white leading-relaxed mb-4 sm:mb-6">
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/50 to-black/60 flex items-center justify-center p-8">
+                      <div className="text-center max-w-4xl">
+                        <p className="text-2xl sm:text-3xl md:text-4xl font-serif text-white leading-relaxed mb-6 drop-shadow-lg">
                           {selectedCovenant.scripture}
                         </p>
-                        <p className="text-xl sm:text-2xl font-bold text-yellow-400 mb-4">
+                        <p className="text-xl sm:text-2xl font-bold text-yellow-400 mb-4 drop-shadow-md">
                           {selectedCovenant.reference}
                         </p>
                         {userName && (
-                          <p className="text-lg sm:text-xl text-amber-200 mt-4 sm:mt-6">
+                          <p className="text-lg sm:text-xl text-amber-200 mt-6 drop-shadow-md">
                             I am {userName}, this is my covenant scripture for 2026
                           </p>
                         )}
@@ -387,36 +456,40 @@ const CovenantSelectionPage = () => {
                     </div>
                   </div>
                 ) : (
-                  <div className="border-4 border-dashed border-gray-400 rounded-2xl h-[400px] sm:h-[500px] flex items-center justify-center bg-gray-100">
+                  <div className="border-4 border-dashed border-yellow-300 rounded-2xl h-[450px] sm:h-[550px] flex items-center justify-center bg-yellow-50/50">
                     <div className="text-center">
-                      <Image className="w-16 sm:w-20 h-16 sm:h-20 text-gray-500 mx-auto mb-4" />
-                      <p className="text-gray-600 text-base sm:text-lg">Select a background image below</p>
+                      <div className="w-20 h-20 bg-gradient-to-br from-yellow-400 to-amber-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                        <Image className="w-10 h-10 text-white" />
+                      </div>
+                      <p className="text-gray-600 text-lg font-medium">Select a background image below</p>
                     </div>
                   </div>
                 )}
               </div>
 
-              <div className="mb-8">
-                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 flex items-center">
-                  <Sparkles className="w-5 sm:w-6 h-5 sm:h-6 mr-2 text-yellow-600" />
+              <div className="mb-10">
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                  <div className="w-8 h-8 bg-gradient-to-br from-yellow-400 to-amber-500 rounded-lg flex items-center justify-center mr-3">
+                    <Sparkles className="w-5 h-5 text-white" />
+                  </div>
                   Choose Background
                 </h3>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
                   {backgroundImages.map((image, index) => (
                     <div
                       key={index}
                       onClick={() => setSelectedImage(index)}
-                      className={`relative cursor-pointer rounded-xl overflow-hidden transition-all transform hover:scale-105 ${
+                      className={`relative cursor-pointer rounded-xl overflow-hidden transition-all duration-300 transform hover:scale-105 ${
                         selectedImage === index
-                          ? 'ring-4 ring-yellow-600 shadow-2xl scale-105'
-                          : 'ring-2 ring-transparent hover:ring-gray-500'
+                          ? 'ring-4 ring-yellow-500 shadow-2xl scale-105'
+                          : 'ring-2 ring-gray-200 hover:ring-yellow-300'
                       }`}
                     >
-                      <img src={image} alt={`Background ${index + 1}`} className="w-full h-24 sm:h-32 object-cover" />
+                      <img src={image} alt={`Background ${index + 1}`} className="w-full h-28 sm:h-36 object-cover" />
                       {selectedImage === index && (
-                        <div className="absolute inset-0 bg-yellow-600/20 flex items-center justify-center">
-                          <div className="bg-white rounded-full p-2">
-                            <Check className="w-5 sm:w-6 h-5 sm:h-6 text-gray-800" />
+                        <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/30 to-amber-500/30 flex items-center justify-center">
+                          <div className="bg-white rounded-full p-2 shadow-lg">
+                            <Check className="w-6 h-6 text-yellow-600" />
                           </div>
                         </div>
                       )}
@@ -425,9 +498,11 @@ const CovenantSelectionPage = () => {
                 </div>
               </div>
 
-              <div className="mb-8">
+              <div className="mb-10">
                 <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 flex items-center">
-                  <Heart className="w-5 sm:w-6 h-5 sm:h-6 mr-2 text-yellow-600" />
+                  <div className="w-8 h-8 bg-gradient-to-br from-yellow-400 to-amber-500 rounded-lg flex items-center justify-center mr-3">
+                    <Heart className="w-5 h-5 text-white" />
+                  </div>
                   Add Your Name (Optional)
                 </h3>
                 <input
@@ -435,24 +510,24 @@ const CovenantSelectionPage = () => {
                   placeholder="Enter your name..."
                   value={userName}
                   onChange={(e) => setUserName(e.target.value)}
-                  className="w-full px-4 sm:px-6 py-3 sm:py-4 text-base sm:text-lg border-2 border-gray-400 rounded-xl focus:outline-none focus:ring-4 focus:ring-yellow-300 focus:border-yellow-600 transition-all bg-white/70"
+                  className="w-full px-6 py-4 text-lg border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-yellow-300 focus:border-yellow-500 transition-all bg-white placeholder-gray-400"
                 />
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <button
                   onClick={() => {
                     setStep(1)
                     setRevealedCovenant(null)
                   }}
-                  className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-4 px-6 rounded-xl transition-all"
+                  className="bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-4 px-6 rounded-xl transition-all border border-gray-300 hover:border-gray-400"
                 >
                   Back to Selection
                 </button>
                 <button
                   onClick={() => setStep(3)}
                   disabled={selectedImage === null}
-                  className="flex-1 bg-gray-800 hover:bg-gray-900 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold py-4 px-6 rounded-xl transition-all flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl"
+                  className="bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed text-white font-bold py-4 px-6 rounded-xl transition-all flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl"
                 >
                   <span>Continue</span>
                   <ChevronRight className="w-5 h-5" />
@@ -465,23 +540,28 @@ const CovenantSelectionPage = () => {
         {step === 3 && selectedCovenant && selectedImage !== null && (
           <div className="animate-fadeIn">
             <div className="text-center mb-12">
+              <div className="inline-block mb-4">
+                <span className="px-4 py-2 bg-gradient-to-r from-yellow-400 to-amber-500 text-white text-sm font-bold rounded-full shadow-md">
+                  🎉 Complete
+                </span>
+              </div>
               <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">Your Covenant is Ready!</h2>
-              <p className="text-lg sm:text-xl text-gray-700">Download or share your personalized covenant</p>
+              <p className="text-lg sm:text-xl text-gray-600">Download or share your personalized covenant</p>
             </div>
 
-            <div className="bg-white/50 backdrop-blur rounded-3xl shadow-2xl p-6 sm:p-8 max-w-4xl mx-auto border-2 border-gray-300">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl mb-8">
+            <div className="bg-white backdrop-blur-xl rounded-3xl shadow-2xl p-6 sm:p-10 max-w-5xl mx-auto border border-yellow-200/50">
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl mb-8 border-2 border-yellow-200">
                 <img
                   src={backgroundImages[selectedImage]}
                   alt="Final"
-                  className="w-full h-[500px] sm:h-[600px] object-cover"
+                  className="w-full h-[550px] sm:h-[650px] object-cover"
                 />
-                <div className="absolute inset-0 bg-black/50 flex items-center justify-center p-6 sm:p-8">
-                  <div className="text-center max-w-3xl">
-                    <p className="text-2xl sm:text-3xl md:text-4xl font-serif text-white leading-relaxed mb-4 sm:mb-6">
+                <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/50 to-black/60 flex items-center justify-center p-8">
+                  <div className="text-center max-w-4xl">
+                    <p className="text-2xl sm:text-3xl md:text-4xl font-serif text-white leading-relaxed mb-6 drop-shadow-lg">
                       {selectedCovenant.scripture}
                     </p>
-                    <p className="text-xl sm:text-2xl font-bold text-yellow-400 mb-4">
+                    <p className="text-xl sm:text-2xl font-bold text-yellow-400 mb-4 drop-shadow-md">
                       {selectedCovenant.reference}
                     </p>
                     {userName && (
